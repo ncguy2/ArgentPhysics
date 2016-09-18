@@ -1,6 +1,7 @@
 package net.ncguy.physics;
 
 import net.ncguy.physics.data.internal.Triplet;
+import net.ncguy.physics.hull.BasicHull;
 import net.ncguy.physics.runtime.AbstractRuntime;
 import net.ncguy.physics.runtime.DataBridge;
 
@@ -30,6 +31,7 @@ public class PhysicsCore {
         activeRuntime = new AbstractRuntime() {
             @Override public void init() {}
             @Override public void dispose() {}
+            @Override public BasicHull buildHull(Object object) { return new BasicHull() {}; }
         };
     }
 
