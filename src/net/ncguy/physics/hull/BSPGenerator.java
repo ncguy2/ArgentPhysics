@@ -25,6 +25,11 @@ public class BSPGenerator {
     }
 
     public static void generateBlock(BasicHull hull, List<BasicHull> hulls, HullBlock block) {
+        if(hulls.size() == 0) {
+            block.setLeftChild(new HullBlock(hull));
+            block.setRightChild(new HullBlock());
+            return;
+        }
         BasicHull closest = null;
         float closestDistance = -1;
         for(int i = 0; i < hulls.size(); i++) {
