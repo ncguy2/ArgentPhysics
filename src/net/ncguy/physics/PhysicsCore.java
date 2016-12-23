@@ -6,6 +6,7 @@ import net.ncguy.physics.runtime.AbstractRuntime;
 import net.ncguy.physics.runtime.DataBridge;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,7 +32,9 @@ public class PhysicsCore {
         activeRuntime = new AbstractRuntime() {
             @Override public void init() {}
             @Override public void dispose() {}
-            @Override public BasicHull buildHull(Object object) { return new BasicHull() {}; }
+            @Override public BasicHull buildHull(Object object) { return new BasicHull() { @Override public void getTris(List list) {} }; }
+            @Override public float[] compileToPrimitives(Object world) { return new float[0]; }
+            @Override public void compileToPrimitives(Object obj, List list) {}
         };
     }
 

@@ -36,6 +36,13 @@ public class Vec2 implements Vec<Vec2> {
     }
 
     @Override
+    public Vec2 set(Vec2 vec) {
+        this.x = vec.x;
+        this.y = vec.y;
+        return this;
+    }
+
+    @Override
     public Vec2 add(Vec2 vec) {
         this.x += vec.x;
         this.x += vec.x;

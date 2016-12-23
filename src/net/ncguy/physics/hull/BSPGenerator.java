@@ -1,5 +1,6 @@
 package net.ncguy.physics.hull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,10 +19,19 @@ public class BSPGenerator {
         return block;
     }
 
-    public static HullBlock generateBlock(BasicHull hull, List<BasicHull> hulls) {
-        HullBlock block = new HullBlock();
-        generateBlock(hull, hulls, block);
-        return block;
+    public static HullBlock generateBlock(List<BasicHull> hulls) {
+        List<HullBlock> children = new ArrayList<>();
+        while(hulls.size() > 0) {
+            HullBlock block = new HullBlock();
+            generateBlock(hulls.remove(0), hulls, block);
+            children.add(block);
+        }
+        while(children.size() > 1) {
+            HullBlock next = new HullBlock();
+            mergeBlocks(children.remove(0), children, next);
+            children.add(next);
+        }
+        return children.get(0);
     }
 
     public static void generateBlock(BasicHull hull, List<BasicHull> hulls, HullBlock block) {
@@ -46,7 +56,34 @@ public class BSPGenerator {
             }
         }
         block.setLeftChild(new HullBlock(hull));
+        hulls.remove(closest);
         block.setRightChild(new HullBlock(closest));
+    }
+
+    public static void mergeBlocks(HullBlock block, List<HullBlock> blocks, HullBlock parent) {
+        if(blocks.size() == 0) {
+            parent.setLeftChild(new HullBlock());
+            parent.setRightChild(new HullBlock());
+            return;
+        }
+        HullBlock closest = null;
+        float closestDistance = -1;
+        for(int i = 0; i < blocks.size(); i++) {
+            HullBlock next = blocks.get(i);
+            if(closest == null) {
+                closest = next;
+                closestDistance = block.getPosition().dst(closest.getPosition());
+                continue;
+            }
+            float nextDistance = block.getPosition().dst(next.getPosition());
+            if(nextDistance < closestDistance) {
+                closest = next;
+                closestDistance = nextDistance;
+            }
+        }
+        parent.setLeftChild(block);
+        blocks.remove(closest);
+        parent.setRightChild(closest);
     }
 
 }

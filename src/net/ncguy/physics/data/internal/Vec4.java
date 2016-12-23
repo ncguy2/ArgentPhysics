@@ -58,6 +58,15 @@ public class Vec4 implements Vec<Vec4> {
     }
 
     @Override
+    public Vec4 set(Vec4 vec) {
+        this.x = vec.x;
+        this.y = vec.y;
+        this.z = vec.z;
+        this.w = vec.w;
+        return this;
+    }
+
+    @Override
     public Vec4 add(Vec4 vec) {
         this.x += vec.x;
         this.y += vec.y;

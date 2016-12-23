@@ -5,6 +5,8 @@ package net.ncguy.physics.data.internal;
  */
 public interface Vec<T> {
 
+    T set(T vec);
+
     T add(T vec);
     T sub(T vec);
     T mul(T vec);

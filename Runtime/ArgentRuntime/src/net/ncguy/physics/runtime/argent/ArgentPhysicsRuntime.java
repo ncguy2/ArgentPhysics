@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 import net.ncguy.argent.entity.WorldEntity;
 import net.ncguy.argent.entity.components.physics.PhysicsComponent;
 import net.ncguy.argent.event.StringPacketEvent;
+import net.ncguy.argent.world.GameWorld;
 import net.ncguy.physics.data.internal.Vec1;
 import net.ncguy.physics.data.internal.Vec2;
 import net.ncguy.physics.data.internal.Vec3;
@@ -13,10 +14,13 @@ import net.ncguy.physics.data.internal.Vec4;
 import net.ncguy.physics.hull.BasicHull;
 import net.ncguy.physics.runtime.AbstractRuntime;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Guy on 18/09/2016.
  */
-public class ArgentPhysicsRuntime<T extends WorldEntity> extends AbstractRuntime<T> {
+public class ArgentPhysicsRuntime<S extends WorldEntity, W extends GameWorld<S>> extends AbstractRuntime<S, W> {
 
     StringPacketEvent toastEvent;
 
@@ -43,7 +47,7 @@ public class ArgentPhysicsRuntime<T extends WorldEntity> extends AbstractRuntime
     }
 
     @Override
-    public BasicHull buildHull(T object) {
+    public BasicHull buildHull(S object) {
         if(!object.has(PhysicsComponent.class)) return null;
         PhysicsComponent comp = object.get(PhysicsComponent.class);
         BasicHull hull;
@@ -54,4 +58,23 @@ public class ArgentPhysicsRuntime<T extends WorldEntity> extends AbstractRuntime
         }
         return null;
     }
+
+    @Override
+    public float[] compileToPrimitives(W world) {
+        final List<Float> floats = new ArrayList<>();
+        world.instances().stream()
+                .filter(c -> c.has(PhysicsComponent.class))
+                .forEach(o -> compileToPrimitives(o, floats));
+        float[] out = new float[floats.size()];
+        for (int i = 0; i < floats.size(); i++)
+            out[i] = floats.get(i);
+        return out;
+    }
+
+    @Override
+    public void compileToPrimitives(S obj, List<Float> floats) {
+        PhysicsComponent component = obj.get(PhysicsComponent.class);
+        component.data.toTris(floats);
+    }
+
 }

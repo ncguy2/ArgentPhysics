@@ -28,6 +28,12 @@ public class Vec1 implements Vec<Vec1> {
     }
 
     @Override
+    public Vec1 set(Vec1 vec) {
+        this.x = vec.x;
+        return this;
+    }
+
+    @Override
     public Vec1 add(Vec1 vec) {
         this.x += vec.x;
         return this;
